@@ -49,7 +49,7 @@ PROGRAM main
   PRINT *, "Header: ",  Trim(record)
 
 
-  ! Read the next three records
+  ! Read the next ten records
   DO i =1, 10
      record = c_null_char ! or "", or CHAR(0)
      ierr = gzgets(inp, record, LEN(record))
@@ -72,10 +72,10 @@ PROGRAM main
   IF (status == 0) THEN
      PRINT *, buff
   ELSE
-     PRINT *, "kk"
+     PRINT *, "Something went wrong in subroutine scanfs()."
   END IF
 
-
+  DEALLOCATE(buff)
 
 
   PRINT *, 'Main has finished gracefully.'

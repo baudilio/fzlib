@@ -64,12 +64,15 @@ CONTAINS
 
     status = 1
 
+	! - open file
     INP = gzopen(TRIM(filename)//c_null_char, "rb")
-    IF (.not. c_ASSOCIATED(inp)) RETURN
+    IF (.not. c_ASSOCIATED(inp)) RETURN ! BTA: sanity check??
 
-    ierr = gzread(INP, buffer, SIZE(buffer))
-    !IF (ierr /= 0) RETURN
+	! read data
+     ierr = gzread(INP, buffer, SIZE(buffer))
+    ! IF (ierr /= 0) RETURN ! TODO: differenciate and handle EOF
 
+	! close
     ierr = gzclose(INP)
     IF (ierr /= 0) RETURN
 
