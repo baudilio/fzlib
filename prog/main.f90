@@ -9,9 +9,12 @@ PROGRAM main
   !CHARACTER(Len=1, kind=c_char), DIMENSION(256) :: record
   CHARACTER(Len=256, kind=c_char) :: record = CHAR(0)
 
+  ! to test scanfs()
+  ! CHARACTER(Len=256, kind=c_char), ALLOCATABLE, dimension(:) :: buff ! nope!
+  CHARACTER(Len=1, kind=c_char), ALLOCATABLE, DIMENSION(:) :: buff ! OK
+
   INTEGER :: i
   INTEGER :: ierr
-
 
   TYPE(c_ptr) :: inp
 
@@ -60,6 +63,20 @@ PROGRAM main
      PRINT *, "something went wrong when closing file"
      STOP 1;
   END IF
+
+
+  ! Test the subroutine scanfs()
+  ALLOCATE(buff(258*11))
+  buff = char(0)
+  CALL scanfs(FILENAME=filename, BUFFER=buff, STATUS=status)
+  IF (status == 0) THEN
+     PRINT *, buff
+  ELSE
+     PRINT *, "kk"
+  END IF
+
+
+
 
   PRINT *, 'Main has finished gracefully.'
   STOP 0
