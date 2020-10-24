@@ -1,0 +1,13 @@
+# For my F90 projects
+
+# mod files
+*.mod
+
+# files from CMake
+CMakeCache.txt
+*/CMakeFiles
+*/cmake_install.cmake
+*/Makefile
+
+# Exclude BUILD directory
+BUILD

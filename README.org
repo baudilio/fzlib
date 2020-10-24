@@ -1,0 +1,74 @@
+#+TITLE: Fortran Module to interface with zlib
+#+AUTHOR: Baudilio Tejerina
+#+EMAIL: bltejerina@gmail.com
+
+* Introduction
+
+  Write a F90 interface to zlib [ref]. To be able to read (eventually write) compressed gzip files calling zlib functions.
+
+  Library home: https://zlib.net
+
+* Manual Compilation
+
+ Compilers library notes:
+
+** Leon (RHEL 7.8)
+
+ GCC - gfortran
+
+ $> module load gnu (I use zlib I installed in there)
+
+ $> ldconfig -p | grep libjpeg
+
+ Using system's gfortran (4.8.5) compiles but 'Cannot open file for reading'
+ $> gfortran -O2 -o a.x `pkg-config --libs zlib` a.f90
+
+ Using gfortran (9.2.0, and 10.2.0) it works!!
+ $> gfortran -O2 -o a.x `pkg-config --libs zlib` a.f90
+
+ The system's libz.so.1 also works with 9 and 10 GCC.
+ Even if for the same execuatble, I change the link paths (ldd a.x) by module load/unload
+
+ Or I compile with
+ $> gfortran -O2 -o a.x a.f90 -lz (no pkg-config)
+
+ So, the problem seems to be the system's gfortran 4.8.5
+
+ Intel - ifort
+ $> module purge; module load intel
+ $> ifort -O2 -o a.x a.f90 -lz
+ BTA: intel does not seem to have the intrinsic STAT, like GCC
+
+
+** Mac OS (Augusta)
+  Has the library See [[https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/zlib.3.html][man zlib]]
+
+  BTA: I see augusta t has the (latest) 1.2.11 version (same number I compiled in Leon)
+
+
+  See $> otools -L a.x
+/usr/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.11)
+
+BTA: however, although the code compiles, (I used gfortran from GCC 10.2.0)  it fails at run time at the gzopen() function too.
+
+The gzip tools also uses it:
+$> otool -L `which gzip`
+
+* CMake
+
+  $> module load cmake
+  $> mkdir BUILD && cd BUILD
+  # $> cmake -DCMAKE_Fortran_COMPILER=gfortran ..
+  It compiles fine but, it does not run  correctly. See note on '-O2' flag.
+
+  $> cmake -DCMAKE_Fortran_COMPILER=gfortran -DCMAKE_Fortran_FLAGS="-O2 -Wall" ..
+  # $> ccmake .
+
+
+* run
+  UPDATE: in reality, I observed that neither combination of gfortra/libz works unless '-O2' is turned on.
+  Same compiling with cmake
+
+  binary image is in BUILD, directory ./prog/scanfs.x
+
+  $> ./BUILD/prog/scanfs.x
