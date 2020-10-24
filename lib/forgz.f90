@@ -3,6 +3,7 @@ MODULE forgz
 
   PRIVATE
   PUBLIC :: gzopen, gzclose, gzgets, gzread
+  PUBLIC :: scanfs
 
   INTERFACE
      TYPE(c_ptr) FUNCTION gzopen(filename, mode) BIND(C, name="gzopen")
@@ -40,5 +41,41 @@ MODULE forgz
        TYPE(c_ptr), VALUE :: gzFile
      END FUNCTION gzclose
   END INTERFACE
+
+
+CONTAINS
+
+  SUBROUTINE scanfs(filename, buffer, status)
+    USE, INTRINSIC :: iso_c_binding, ONLY: c_char, c_int, c_ptr, &
+         c_null_char, c_associated
+    IMPLICIT NONE
+
+    ! -- dummy arguments
+    CHARACTER(len=*, kind=c_char), INTENT(in) :: filename
+    CHARACTER(len=1, kind=c_char), DIMENSION(:), INTENT(inout) :: buffer
+    INTEGER, INTENT(out) :: status
+
+    ! -- Local Variables
+    TYPE(c_ptr) :: inp
+    INTEGER(c_int) :: ierr
+
+
+    ! ---
+
+    status = 1
+
+    INP = gzopen(TRIM(filename)//c_null_char, "rb")
+    IF (.not. c_ASSOCIATED(inp)) RETURN
+
+    ierr = gzread(INP, buffer, SIZE(buffer))
+    !IF (ierr /= 0) RETURN
+
+    ierr = gzclose(INP)
+    IF (ierr /= 0) RETURN
+
+    ! No errors
+    status = 0
+  END SUBROUTINE scanfs
+
 
 END MODULE forgz
