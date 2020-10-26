@@ -31,11 +31,10 @@ PROGRAM main
 
   ! -- get some info about the gz file
   CALL STAT(NAME=filename, VALUES=attr, STATUS=status)
-  WRITE (*, FMT="('File size:',               T30, I19)") attr(8)
+  WRITE (*, FMT="('File size:',               T30, I19, ' bytes')") attr(8)
   WRITE (*, FMT="('Last access time:',        T30, A19)") CTIME(attr(9))
-  WRITE (*, FMT="('Preferred block size:',    T30, I19)") attr(12)
+  WRITE (*, FMT="('Preferred block size:',    T30, I19, ' bytes')") attr(12)
   WRITE (*, FMT="('No. of blocks allocated:', T30, I19)") attr(13)
-
 
   ! -- open gz file
   inp = gzopen(filename, "rb")

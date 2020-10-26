@@ -67,7 +67,7 @@ CONTAINS
 
     ! - open file
     gzFile = gzopen(TRIM(filename)//c_null_char, "rb")
-    IF (.NOT. c_ASSOCIATED(inp)) RETURN ! BTA: sanity check??
+    IF (.NOT. c_ASSOCIATED(gzFile)) RETURN ! BTA: sanity check??
 
     ! - read data
     len = SIZE(buffer, KIND=c_int)
