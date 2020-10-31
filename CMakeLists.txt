@@ -9,6 +9,10 @@ project(example Fortran)
 
 set(PACKAGE Zlib)
 
+#
+set(CMAKE_Fortran_COMPILER "gfortran")
+set(CMAKE_Fortran_FLAGS ${CMAKE_Fortran_FLAGS} "-Wall -O2")
+
 # List of subdirectories to consider
 add_subdirectory(prog)
 add_subdirectory(lib)
