@@ -2,11 +2,14 @@
 #+AUTHOR: Baudilio Tejerina
 #+EMAIL: bltejerina@gmail.com
 
+#+STARTUP: overview
+
 * Introduction
 
   Write a F90 interface to zlib [ref]. To be able to read (eventually write) compressed gzip files calling zlib functions.
 
   Library home: https://zlib.net
+
 
 * Manual Compilation
 
@@ -54,6 +57,7 @@ BTA: however, although the code compiles, (I used gfortran from GCC 10.2.0)  it 
 The gzip tools also uses it:
 $> otool -L `which gzip`
 
+
 * CMake
 
   $> module load cmake
@@ -64,6 +68,22 @@ $> otool -L `which gzip`
   $> cmake -DCMAKE_Fortran_COMPILER=gfortran -DCMAKE_Fortran_FLAGS="-O2 -Wall" ..
   # $> ccmake .
 
+  Alternatively, from the root directory
+  $> module load cmake
+
+  BTA: Create makefile(s): instruct
+  CMake to use the CMakeLists in the
+  directory '.', i.e., the current,
+  root, WD and place all the auxiliary
+  files in the new directory BUILD
+
+  $> cmake . -BBUILD
+
+  BTA: now build:
+  $> cmake --build BUILD
+
+  BTA: run:
+  $> ./BUILD/prog/scanfs.x
 
 * run
   UPDATE: in reality, I observed that neither combination of gfortra/libz works unless '-O2' is turned on.
@@ -72,3 +92,9 @@ $> otool -L `which gzip`
   binary image is in BUILD, directory ./prog/scanfs.x
 
   $> ./BUILD/prog/scanfs.x
+
+* References
+
+  [[https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html][How to structure the projects]]
+
+  [[https://gitlab.kitware.com/cmake/community/-/wikis/home][CMake wiki]]
